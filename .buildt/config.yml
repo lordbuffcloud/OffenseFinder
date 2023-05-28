@@ -1,0 +1,10 @@
+name: personalsite
+id: 052c7bdd-373d-4650-878a-bda142c7e41e
+languages:
+  - TypeScript
+  - TSX
+extensions:
+  - .ts
+  - .cts
+  - .mts
+  - .tsx
