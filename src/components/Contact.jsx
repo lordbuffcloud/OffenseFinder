@@ -1,6 +1,5 @@
 import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
-
 import { styles } from "../styles";
 import { EarthCanvas } from "./canvas";
 import { SectionWrapper } from "../hoc";
@@ -13,20 +12,25 @@ const ChatBot = () => {
   });
   const [chatHistory, setChatHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const prompt = "Based on the laws applicable to the Ohio Revised Code, Uniform code of Military Justice, United States Code, and the WRIGHT PATTERSON AIR FORCE BASE INSTRUCTION 31-218, provide the laws, regulations or violations of an offense or subject actions. Provide the applicable references to the laws, codes and regulations and provide the recommended charges based on if they were a civilian or military member, and if the charges if they were in exclusive or concurrent jurisdiction. The actions of the offender are : ";
-  
+
   const handleInputChange = (event) => {
-    setForm({OffenderActions: event.target.value});
+    setForm({ OffenderActions: event.target.value });
   };
-  
+
   const handleChatSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
 
-    const combinedInput = `${prompt} ${form.OffenderActions}`;
-    const response = await query({ question: combinedInput });
-    setChatHistory([...chatHistory, { user: form.OffenderActions, bot: response }]);
-    setForm({OffenderActions: ""});
+    const promptWithUserInput = `I'm currently investigating an incident and need to determine all possible charges based on the suspect's actions. The suspect's behavior includes: ${form.OffenderActions}. Please provide me a comprehensive list of all applicable charges and penalties under the Uniform Code of Military Justice (UCMJ), United States Code (USC), Ohio Revised Code, and Wright Patterson 31-118. Additionally, please include any possible traffic violations that might be applicable. For each potential charge, kindly provide the charge name, specific reference code, and potential penalties.`;
+
+    try {
+      const response = await query({ question: promptWithUserInput });
+      setChatHistory([...chatHistory, { user: form.OffenderActions, bot: response }]);
+      setForm({ OffenderActions: "" });
+    } catch (error) {
+      console.error("An error occurred when querying the API", error);
+      // Handle the error appropriately in your application, potentially informing the user
+    }
     setIsLoading(false);
   };
 
